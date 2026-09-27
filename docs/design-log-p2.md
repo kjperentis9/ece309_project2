@@ -8,7 +8,7 @@ My Conversation class starts with capacity 0 and allocates space for one message
 
 An append that has available space takes O(1) work, treating each message operation as constant time. An append that requires resizing takes O(n) work because the existing messages must be transferred to the larger array. However, resizing does not happen on every append. Across n appends, the number of existing messages transferred follows the geometric sum 1 + 2 + 4 + ..., which is less than 2n. Including the n new messages gives O(n) total work and O(1) amortized work per append.
 
-The tradeoff is unused capacity after resizing. I chose doubling because it keeps the implementation straightforward while reducing how often allocations happen. My growth test checks the capacity after every append, verifies that 101 messages produce a capacity of 128, and confirms that all message contents remain correct.
+The tradeoff is unused capacity after resizing. I chose doubling because it keeps the implementation straightforward while reducing how often allocations happen. My growth test checks the capacity after every append, verifies that 100 messages produce a capacity of 128, and confirms that all message contents remain correct.
 
 ## Rule of Five evidence
 
@@ -16,9 +16,9 @@ Conversation owns a dynamically allocated array, so it needs to manage copying, 
 
 Copy assignment uses a temporary copy and swaps ownership. This replaces the destination’s previous contents while allowing the temporary object to clean up its old array. It also supports self-assignment. The move constructor and move assignment transfer ownership of the existing array instead of copying every message. They reset the source to an empty state so it no longer owns the transferred storage.
 
-My tests check that copied conversations have different array addresses and preserve their contents independently. They also check assignment into an existing conversation, self-copy assignment, and assignment from an empty conversation. The move tests verify that the destination receives the original array address and that the moved-from conversation can accept new messages.
+My tests check that copied conversations have different array addresses and preserve their contents independently. They also check copy assignment into an existing conversation. The move tests verify that both move construction and move assignment transfer the original array address and reset the source pointer, size, and capacity to zero.
 
-All 18 tests passed when I ran the test executable with leak detection enabled. These tests provide evidence for the behaviors checked, although passing them does not guarantee that every possible case is covered.
+All 13 tests passed when I ran the test executable with leak detection enabled. These tests provide evidence for the behaviors checked, although passing them does not guarantee that every possible case is covered.
 
 ## Sentinel scanner: bounded pending_ proof
 
