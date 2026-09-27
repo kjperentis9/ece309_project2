@@ -33,6 +33,8 @@ public:
     const Message* end() const noexcept;
 
 private:
+    friend struct ConversationTestAccess;
+    
     Message* data_ = nullptr;
     std::size_t size_ = 0;
     std::size_t capacity_ = 0;
